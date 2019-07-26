@@ -25,7 +25,7 @@ io.on('connection' , (socket) => {
     socket.join('room 1');
     socket.join('room 2');
     socket.join('room 3' , () => {
-        const  rooms = Object.keys(socket.rooms);
+        const  rooms = Object.keys(socket.rooms); //bağlı olan odaları listeleyecek..!!!!
         console.log(rooms);
     });
 
