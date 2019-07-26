@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+        $(() => {
+            const socket = io.connect('http://localhost:3000/');
+
+            socket.on('merhabaDe' , () => {
+                $('#merhaba').html('merhaba');
+            });
+
+            $('button').on('click' , () => {
+                socket.emit('selamVer');
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+    MERHABA BEN HTML DOSYASI
+    <button >Selam Ver</button>
+    <div id="merhaba"></div>
+</body>
+</html>
