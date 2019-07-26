@@ -9,12 +9,15 @@
         $(() => {
             const socket = io.connect('http://localhost:3000/');
 
-            socket.on('merhabaDe' , () => {
-                $('#merhaba').html('merhaba');
-            });
+            //sunucu tarafındaki emiti clientta yakaladık veyazdırdık
+            /*socket.on('merhabaDe' , (data) => {
+                $('#merhaba').append('merhaba ' + data.country + '<br>');
+            });*/
+
 
             $('button').on('click' , () => {
-                socket.emit('selamVer');
+                //2. bir parametre vererek  sunucu tarafına yolluyoruz.
+                socket.emit('selamVer',{city: 'istanbul', name: 'ismail'});
             });
         });
 
