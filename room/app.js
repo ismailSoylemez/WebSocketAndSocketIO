@@ -13,6 +13,8 @@ const io = socketio.listen(server);
 io.on('connection' , (socket) => {
     console.log('user connected');
 
+    console.log(socket.id);
+
     socket.on('joinRoom' , (data) => {
 
         //1. parametre hangi odaya katılmak istediğini belirtir
@@ -21,8 +23,8 @@ io.on('connection' , (socket) => {
            //odaya katıldığında diğer kullanıcılara gönderilmesi için
            //data.name oda adı !
            //socket.to dersem aktif tcp bağlantısı hariç herkese gönderecek
-           let count = io.sockets.adapter.rooms[data.name].length; //odadaki kişi sayısı
-           io.to(data.name).emit('new join' , {count});
+           //let count = io.sockets.adapter.rooms[data.name].length; //odadaki kişi sayısı
+           io.to(data.name).emit('new join' , {count: getOnlineCount(io,data)});
            //herkese gönderecek kendisi dahil
            //io.to(data.name).emit('new join');
 
@@ -30,6 +32,13 @@ io.on('connection' , (socket) => {
 
        });
 
+       //odadan ayrılmak
+       socket.on('leaveRoom' , (data) => {
+           socket.leave(data.name, () => {
+               io.to(data.name).emit('leavedRoom' , {count: getOnlineCount(io,data)});
+               socket.emit('socket.leaved', {message: 'odadan ayrıldınız'});
+           });
+       });
 
     });
 
@@ -37,4 +46,12 @@ io.on('connection' , (socket) => {
 
 
 
+
+
+
 });
+
+const getOnlineCount = (io,data) => {
+  const room  = io.sockets.adapter.rooms[data.name];
+  return room ? room.length : 0;
+};

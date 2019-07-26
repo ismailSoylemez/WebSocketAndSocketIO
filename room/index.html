@@ -5,8 +5,14 @@
     <title>Websocket</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <style>
+        #leaveRoom{
+            display: none;
+        }
+    </style>
     <script>
         $(() => {
+
             const socket = io.connect('http://localhost:3000');
 
 
@@ -15,14 +21,37 @@
                 socket.emit('joinRoom' , (data) => {name: $('#roomName').val()});
             });
 
+
             socket.on('new join' , (data) => {
                 //$('.logs').append('<div>odaya biri katıldı</div>');
-                $('#userCount').html('Bu odada'+data.count + ' kişi var');
+                $('#userCount').html('Bu odada '+ '<b>'+data.count+'</b>' + ' kişi var');
                 socket.on('log' , (data) => {
                     $('.logss').append(data.message);
+                        //odaya girişten sonra buton ve input kapanacak
+                    $('#roomName , #joinRoom').attr('disabled','disabled');
+                    $('#leaveRoom').show();
+                });
+
+            socket.on('socket.leaved' , (data) => {
+                $('.logss').append('<br>'+data.message+'<br>');
+                //odaya girişten sonra buton ve input kapanacak
+                 $('#roomName , #joinRoom').removeAttr('disabled');
+                 $('#leaveRoom').hide();
+                 $('#userCount').empty();
+            });
+
+        });
+
+            //leave butonuna tıklandığında
+            $('#leaveRoom').on('click' , () => {
+                socket.emit('leaveRoom', (data) => {
+                    {name: $('#roomName').val()}
                 });
             });
 
+            socket.on('leavedRoom' , (data) => {
+                $('#userCount').html('Bu odada'+data.count + ' kişi var');
+            });
 
         });
 
@@ -31,11 +60,12 @@
     </script>
 </head>
 <body>
-    <input id="roomName" type="text"><br>
-    <button id="joinRoom">Join</button><br>
-    <div class="logs"></div><br>
-    <div id="userCount"></div><br>
-    <div class="logss"></div><br>
+    <input id="roomName" type="text">
+    <button id="joinRoom">Join</button>
+    <button id="leaveRoom">Leave</button>
+    <div class="logss"></div>
+    <div id="userCount"></div>
+
 
 </body>
 </html>
