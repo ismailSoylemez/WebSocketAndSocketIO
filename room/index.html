@@ -18,10 +18,11 @@
 
             //inputa girilen değeri aldık
             $('#joinRoom').on('click' , () => {
-                socket.emit('joinRoom' , (data) => {name: $('#roomName').val()});
+                socket.emit('joinRoom' ,  { name: $('#roomName').val() } );
             });
 
 
+            //yeni kullanıcı girdiğinde
             socket.on('new join' , (data) => {
                 //$('.logs').append('<div>odaya biri katıldı</div>');
                 $('#userCount').html('Bu odada '+ '<b>'+data.count+'</b>' + ' kişi var');
