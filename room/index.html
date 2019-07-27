@@ -17,7 +17,19 @@
                 reconnectionAttempts: 4,  //ilk bağlanma girişiminden sonra 2 kez daha bağlanma limiti koyduk
                 reconnectionDelay: 3000, // 3 saniyede bir bağlanmayı dener
                 //reconnection: false //ilk bağlantıdan sonra denemez
+            });
 
+            //yeniden bağlanmaya çalıştığı anı almaya çalış
+            socket.on('reconnect_attempt' , () => {
+                $('.reconnectStatus').html('Yeniden Bağlanmaya Çalışılıyor.');
+            });
+            //yeniden bağlanma başarısı ise
+            socket.on('reconnect_error' , () => {
+                $('.reconnectStatus').html('Yeniden Bağlanma Başarısız.');
+            });
+            //yeniden bağlanma başarılı ise
+            socket.on('reconnect' , () => {
+                $('.reconnectStatus').html('Yeniden Bağlanma Başarılı.');
             });
 
 
@@ -66,6 +78,9 @@
     </script>
 </head>
 <body>
+    <div class="reconnectStatus"></div>
+
+
     <input id="roomName" type="text">
     <button id="joinRoom">Join</button>
     <button id="leaveRoom">Leave</button>
